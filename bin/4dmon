@@ -6,15 +6,17 @@ var program = require( 'commander' )
   , info = require( '../lib/info' )
   , cli = require( '../lib/cli' )
   , fs = require( 'fs' )
-  , host
-  , port
+  , async = require( 'async' )
+  , actions = []
+  , host = cli.host
+  , port = cli.port
   ;
 
 program
   .version( info.version() )
   //.option( '-h, --help', 'show some helpful stuffs' )
-  .option( '-H, --host [host]', 'specify the host machine, IP, or URL where 4dmon is running. Defaults to localhost.', 'localhost' )
-  .option( '-p, --port [port]', 'specify the port 4dmon is bound to on <host>. Defaults to 4077.', '4077' )
+  .option( '-H, --host [host]', 'specify the host machine, IP, or URL where 4dmon is running. Defaults to ' + host + '.', host )
+  .option( '-p, --port [port]', 'specify the port 4dmon is bound to on <host>. Defaults to ' + port + '.', port )
   .option( '--start-client', 'start the 4D client at <host>' )
   .option( '--stop-client', 'stop the 4D client at <host>' )
   .option( '--start-server', 'start the 4D server at <host>' )
@@ -34,37 +36,28 @@ program
 // Handle command line options
 // -----------------------------------------------------
 
-port = program.port;
-host = program.host;
+// Set host and port
+cli.host = program.host;
+cli.port = program.port;
+
+// -----------------------------------------------------
+// Order is important!
+// -----------------------------------------------------
 
 if( program.alias ) {
-  cli.setHostAlias( host, program.alias );
+  actions.push((function( alias ) {
+    return function( cb ) {
+      cli.setHostAlias( alias, cb );
+    };
+  }( program.alias )));
 }
 
-if( program.cleanSettings ) {
-  cli.cleanSettings();
-}
+if( program.cleanSettings ) actions.push( cli.cleanSettings );
+if( program.list ) actions.push( cli.listAliases );
+if( program.stopClient ) actions.push( cli.stopClient );
+if( program.stopServer ) actions.push( cli.stopServer );
+if( program.startServer ) actions.push( cli.startServer );
+if( program.startClient ) actions.push( cli.startClient );
+if( program.snapshot ) actions.push( cli.snapshot );
 
-if( program.list ) {
-  cli.listAliases();
-}
-
-if( program.stopServer ) {
-  cli.stopServer( host, port );
-}
-
-if( program.stopClient ) {
-  cli.stopClient( host, port );
-}
-
-if( program.startServer ) {
-  cli.startServer( host, port );
-}
-
-if( program.startClient ) {
-  cli.startClient( host, port );
-}
-
-if( program.snapshot ) {
-  cli.snapshot( host, port );
-}
+async.series( actions );
