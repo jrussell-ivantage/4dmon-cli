@@ -1,3 +1,3 @@
 # 4dmon-cli
 
-Utility for remote controlling 4dmon instances
+Command line utility for remote controlling 4dmon instances
