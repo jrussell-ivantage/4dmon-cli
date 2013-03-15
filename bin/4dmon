@@ -34,8 +34,8 @@ program
 // Handle command line options
 // -----------------------------------------------------
 
-host = program.host;
 port = program.port;
+host = program.host;
 
 if( program.alias ) {
   cli.setHostAlias( host, program.alias );
@@ -50,21 +50,21 @@ if( program.list ) {
 }
 
 if( program.stopServer ) {
-  cli.stopServer( host );
+  cli.stopServer( host, port );
 }
 
 if( program.stopClient ) {
-  cli.stopClient( host );
+  cli.stopClient( host, port );
 }
 
 if( program.startServer ) {
-  cli.startServer( host );
+  cli.startServer( host, port );
 }
 
 if( program.startClient ) {
-  cli.startClient( host );
+  cli.startClient( host, port );
 }
 
 if( program.snapshot ) {
-  cli.snapshot( host );
+  cli.snapshot( host, port );
 }
