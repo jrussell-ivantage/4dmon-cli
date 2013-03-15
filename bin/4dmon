@@ -1,0 +1,70 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var program = require( 'commander' )
+  , info = require( '../lib/info' )
+  , cli = require( '../lib/cli' )
+  , fs = require( 'fs' )
+  , host
+  , port
+  ;
+
+program
+  .version( info.version() )
+  //.option( '-h, --help', 'show some helpful stuffs' )
+  .option( '-H, --host [host]', 'specify the host machine, IP, or URL where 4dmon is running. Defaults to localhost.', 'localhost' )
+  .option( '-p, --port [port]', 'specify the port 4dmon is bound to on <host>. Defaults to 4077.', '4077' )
+  .option( '--start-client', 'start the 4D client at <host>' )
+  .option( '--stop-client', 'stop the 4D client at <host>' )
+  .option( '--start-server', 'start the 4D server at <host>' )
+  .option( '--stop-server', 'stop the 4D server at <host>' )
+  .option( '--snapshot', 'get a snapshot of client/server running on <host>' )
+
+  .option( '--alias <alias>', 'assign an internal alias for <host>' )
+
+  .option( '-l, --list', 'display aliased hosts' )
+
+  .option( '--clean-settings', 'reset 4dmon-cli settings (aliases, etc)' )
+
+  .parse( process.argv );
+
+
+// -----------------------------------------------------
+// Handle command line options
+// -----------------------------------------------------
+
+host = program.host;
+port = program.port;
+
+if( program.alias ) {
+  cli.setHostAlias( host, program.alias );
+}
+
+if( program.cleanSettings ) {
+  cli.cleanSettings();
+}
+
+if( program.list ) {
+  cli.listAliases();
+}
+
+if( program.stopServer ) {
+  cli.stopServer( host );
+}
+
+if( program.stopClient ) {
+  cli.stopClient( host );
+}
+
+if( program.startServer ) {
+  cli.startServer( host );
+}
+
+if( program.startClient ) {
+  cli.startClient( host );
+}
+
+if( program.snapshot ) {
+  cli.snapshot( host );
+}

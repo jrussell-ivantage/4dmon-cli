@@ -1,0 +1,25 @@
+{
+  "name": "4dmon-cli",
+  "version": "0.0.0",
+  "description": "Command line utility for (remote?) controlling 4dmon instances",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": "",
+  "keywords": [
+    "4dmon",
+    "cli",
+    "4D"
+  ],
+  "preferGlobal": true,
+  "bin": {
+    "4dmon": "bin/4dmon"
+  },
+  "author": "tech@ivantagehealth.com",
+  "license": "BSD",
+  "dependencies": {
+    "commander": "~1.1.1",
+    "request": "~2.16.2"
+  }
+}
